@@ -1,38 +1,47 @@
 #include "Game.h"
 #include "../Config/GameConfig.h"
+#include "../Entities/Animal.h"
+#include <ctime>
+#include <windows.h>
 
 Game::Game()
 {
-	//1 - Create the main window
 	pWind = CreateWind(config.windWidth, config.windHeight, config.wx, config.wy);
 
-	//2 - create and draw the toolbar
 	createToolbar();
 	createBudgetbar();
-	//3 - create and draw the backgroundPlayingArea
 
+	// Abdelaziz Feature 1 start
+	animalCount = 0;
+	productCount = 0;
+	level = 1;
+	goal = 10;
+	startTime = time(0);
 
-	//4- Create the Plane
-	//TODO: Add code to create and draw the Plane
+	for (int i = 0; i < 100; i++)
+	{
+		animalList[i] = nullptr;
+		productList[i] = nullptr;
+	}
+	// Abdelaziz Feature 1 end
 
-	//5- Create the Bullet
-	//TODO: Add code to create and draw the Bullet
-
-	//6- Create the enemies
-	//TODO: Add code to create and draw enemies in random places
-
-	//7- Create and clear the status bar
 	clearStatusBar();
 }
 
 Game::~Game()
 {
+	// Abdelaziz Feature 1 start
+	for (int i = 0; i < animalCount; i++)
+		if (animalList[i]) delete animalList[i];
+
+	for (int i = 0; i < productCount; i++)
+		if (productList[i]) delete productList[i];
+	// Abdelaziz Feature 1 end
 }
 
 clicktype Game::getMouseClick(int& x, int& y) const
 {
-	return pWind->WaitMouseClick(x, y);	//Wait for mouse click
-
+	return pWind->WaitMouseClick(x, y);
 }
 
 string Game::getSrting() const
@@ -44,11 +53,11 @@ string Game::getSrting() const
 	while (1)
 	{
 		ktype = pWind->WaitKeyPress(Key);
-		if (ktype == ESCAPE)	//ESCAPE key is pressed
-			return "";	//returns nothing as user has cancelled label
-		if (Key == 13)	//ENTER key is pressed
+		if (ktype == ESCAPE)
+			return "";
+		if (Key == 13)
 			return Label;
-		if (Key == 8)	//BackSpace is pressed
+		if (Key == 8)
 			if (Label.size() > 0)
 				Label.resize(Label.size() - 1);
 			else
@@ -68,7 +77,7 @@ window* Game::CreateWind(int w, int h, int x, int y) const
 	return pW;
 }
 
-void Game::createToolbar() 
+void Game::createToolbar()
 {
 	point toolbarUpperleft;
 	toolbarUpperleft.x = 0;
@@ -88,28 +97,24 @@ void Game::createBudgetbar()
 	gameBudgetbar->draw();
 }
 
-
 void Game::clearBudget() const
 {
-	//Clear Status bar by drawing a filled rectangle
 	pWind->SetPen(config.bkGrndColor, 1);
 	pWind->SetBrush(config.bkGrndColor);
-	pWind->DrawRectangle(config.windWidth - 500, config.toolBarHeight, config.windWidth, 2*config.toolBarHeight);
+	pWind->DrawRectangle(config.windWidth - 500, config.toolBarHeight, config.windWidth, 2 * config.toolBarHeight);
 }
 
 void Game::printBudget(string msg) const
 {
-	clearBudget();	//First clear the status bar
+	clearBudget();
 
 	pWind->SetPen(config.penColor, 50);
 	pWind->SetFont(24, BOLD, BY_NAME, "Arial");
-	pWind->DrawString(config.windWidth-200, config.toolBarHeight + 10, msg);
-
+	pWind->DrawString(config.windWidth - 200, config.toolBarHeight + 10, msg);
 }
 
 void Game::clearStatusBar() const
 {
-	//Clear Status bar by drawing a filled rectangle
 	pWind->SetPen(config.statusBarColor, 1);
 	pWind->SetBrush(config.statusBarColor);
 	pWind->DrawRectangle(0, config.windHeight - config.statusBarHeight, config.windWidth, config.windHeight);
@@ -117,13 +122,57 @@ void Game::clearStatusBar() const
 
 void Game::printMessage(string msg) const
 {
-	clearStatusBar();	//First clear the status bar
+	clearStatusBar();
 
 	pWind->SetPen(config.penColor, 50);
 	pWind->SetFont(24, BOLD, BY_NAME, "Arial");
 	pWind->DrawString(10, config.windHeight - (int)(0.85 * config.statusBarHeight), msg);
-
 }
+
+// Abdelaziz Feature 1 start
+void Game::updateStatusBar(int elapsedTime) const
+{
+	clearStatusBar();
+
+	pWind->SetPen(WHITE, 2);
+	pWind->SetFont(20, BOLD, BY_NAME, "Arial");
+
+	int y = config.windHeight - (int)(0.7 * config.statusBarHeight);
+
+	pWind->DrawString(20, y, "Timer: " + to_string(elapsedTime) + "s");
+	pWind->DrawString(260, y, "Goal: " + to_string(goal));
+	pWind->DrawString(470, y, "Level: " + to_string(level));
+	pWind->DrawString(680, y, "Animals: " + to_string(animalCount));
+}
+
+void Game::addAnimal(Animal* pAnim)
+{
+	if (animalCount < 100 && pAnim)
+		animalList[animalCount++] = pAnim;
+	else
+		delete pAnim;
+}
+
+void Game::addProduct(Product* pProd)
+{
+	if (productCount < 100 && pProd)
+		productList[productCount++] = pProd;
+	else
+		delete pProd;
+}
+
+void Game::drawAllAnimals() const
+{
+	for (int i = 0; i < animalCount; i++)
+		if (animalList[i]) animalList[i]->draw();
+}
+
+void Game::drawAllProducts() const
+{
+	for (int i = 0; i < productCount; i++)
+		if (productList[i]) productList[i]->draw();
+}
+// Abdelaziz Feature 1 end
 
 window* Game::getWind() const
 {
@@ -132,34 +181,66 @@ window* Game::getWind() const
 
 void Game::go() const
 {
-	//This function reads the position where the user clicks to determine the desired operation
 	int x, y;
 	bool isExit = false;
+	bool wasMouseDown = false;
 
-	//Change the title
 	pWind->ChangeTitle("- - - - - - - - - - Farm Frenzy (CIE101-project) - - - - - - - - - -");
+	pWind->SetBuffering(true);
 
 	do
 	{
-		printMessage("Ready...");
+		bool isMouseDown = pWind->GetButtonState(LEFT_BUTTON, x, y);
+		if (isMouseDown && !wasMouseDown)
+		{
+			if (y >= 0 && y < config.toolBarHeight)
+			{
+				isExit = gameToolbar->handleClick(x, y);
+			}
+			else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight)
+			{
+				gameBudgetbar->handleClick(x, y);
+			}
+		}
+		wasMouseDown = isMouseDown;
+
+		// Abdelaziz Feature 1 start
+		time_t currentTime = time(0);
+		int elapsedTime = (int)(currentTime - startTime);
+
+		for (int i = 0; i < animalCount; i++)
+		{
+			if (animalList[i])
+			{
+				animalList[i]->moveStep();
+				animalList[i]->produce(currentTime);
+			}
+		}
+		// Abdelaziz Feature 1 end
+
+		pWind->SetBrush(config.bkGrndColor);
+		pWind->SetPen(config.bkGrndColor, 1);
+		pWind->DrawRectangle(0, 0, config.windWidth, config.windHeight);
+
+		gameToolbar->draw();
+		gameBudgetbar->draw();
+
+		// Abdelaziz Feature 4,7,19,21 start
+
+		drawAllAnimals();
+		drawAllProducts();
+		// Abdelaziz Feature 4,7,19,21 end
+	
+
 		string budget_string = "BUDGET = $" + to_string(budget);
 		printBudget(budget_string);
-		//printBudget("BUDGET = $1000");
-		getMouseClick(x, y);	//Get the coordinates of the user click
-		//if (gameMode == MODE_DSIGN)		//Game is in the Desgin mode
-		//{
-			//[1] If user clicks on the Toolbar
-		if (y >= 0 && y < config.toolBarHeight)
-		{
-			isExit = gameToolbar->handleClick(x, y);
-		}
-		else if (y >= config.toolBarHeight && y < 2*config.toolBarHeight)
-		{
-			isExit = gameBudgetbar->handleClick(x, y);
-		}
-		//}
+
+		// Abdelaziz Feature 1 start
+		updateStatusBar(elapsedTime);
+		// Abdelaziz Feature 1 end
+
+		pWind->UpdateBuffer();
+		Sleep(20);
 
 	} while (!isExit);
 }
-
-
