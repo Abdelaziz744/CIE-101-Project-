@@ -21,12 +21,12 @@ private:
 	Toolbar* gameToolbar;
 	Budgetbar* gameBudgetbar;
 
-//magdy
-Warehouse*  warehouse;
-FoodArea* foodAreas[5];
-int       numFoodAreas;
-time_t    lastTickTime;     
-int       tickCount;    
+	//magdy
+	Warehouse*  warehouse;
+	FoodArea* foodAreas[5];
+	int       numFoodAreas;
+	time_t    lastTickTime;     
+	int       tickCount;    
 
 	// Abdelaziz Feature 1 start
 	Animal* animalList[100];
@@ -43,7 +43,7 @@ public:
 	int level = 1;
 	int time = 150;
 	int animalcount = 0;
-	void gametimer(int level); // The function to calculate time
+	void gametimer(int level); 
     int foodListSize = 0;
     FoodArea** foodList;
 	Game();
@@ -60,15 +60,13 @@ public:
 	void clearStatusBar() const;
     void updatestatusbar() const; //refresh the status bar continously
 	void printMessage(string msg) const;
-//magdy
-void     createWarehouse();
-void     createWolf();
-void     createFoodAreas();
-void     gameTick();        
-
-
-
-
+	//magdy
+	void     createWarehouse();
+	void     createWolf();
+	void     createFoodAreas();
+	void     gameTick();        
+	//Ahmed Ismail
+	void drawFoodArea() const;
 	// Abdelaziz Feature 1 start
 	void updateStatusBar(int elapsedTime) const;
 	void addAnimal(Animal* pAnim);
