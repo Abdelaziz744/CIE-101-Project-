@@ -4,6 +4,7 @@
 #include "../UI/BudgetBar.h"
 #include <ctime>
 #include <string>
+#include "../Entities/FoodArea.h"
 
 class Animal;
 class Product;
@@ -24,14 +25,15 @@ private:
 	int goal;
 	time_t startTime;
 	// Abdelaziz Feature 1 end
-
+  
 public:
 	int budget = 2000;
 	int level = 1;
 	int time = 150;
 	int animalcount = 0;
 	void gametimer(int level); // The function to calculate time
-
+    int foodListSize = 0;
+    FoodArea** foodList;
 	Game();
 	~Game();
 
