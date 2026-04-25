@@ -47,7 +47,40 @@ void ChickIcon::onClick()
 		// Abdelaziz Feature 19 end
 		// Abdelaziz Feature 4 end
 	}
+} 
+//magdy
+void ChickIcon::tick(Warehouse* wh)
+{
+	window* pWind = pGame->getWind();
+
+	for (int i = 0; i < count; i++)
+	{
+		if (chickList[i] == nullptr) continue;
+
+		chickList[i]->productionCounter++;
+		chickList[i]->drawCounter();   
+
+		if (chickList[i]->isReadyToProduce())
+		{
+			
+			if (wh) wh->addProduct("Egg");
+
+			pWind->SetPen(YELLOW, 3);
+			pWind->SetBrush(YELLOW);
+			pWind->DrawRectangle(
+				chickList[i]->curr_pos.x - 2,
+				chickList[i]->curr_pos.y - 2,
+				chickList[i]->curr_pos.x + 52,
+				chickList[i]->curr_pos.y + 52);
+			chickList[i]->draw();
+			chickList[i]->resetTimer();
+			chickList[i]->drawCounter();
+
+			cout << "Egg produced! Added to warehouse." << endl;
+		}
+	}
 }
+
 
 CowIcon::CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path)
 	: BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
