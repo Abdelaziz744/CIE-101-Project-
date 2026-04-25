@@ -119,6 +119,20 @@ void Game::clearStatusBar() const
 	pWind->SetBrush(config.statusBarColor);
 	pWind->DrawRectangle(0, config.windHeight - config.statusBarHeight, config.windWidth, config.windHeight);
 }
+void Game::updatestatusbar() const
+{
+	clearStatusBar();
+	string status = "Level: " + to_string(level) + " | Timer: " + to_string(time) + " | Animals: " + to_string(animalcount);
+	pWind->SetPen(config.penColor);
+	pWind->SetFont(20, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(10, config.windHeight - (int)(0.85 * config.statusBarHeight), status);
+
+}
+void Game::drawfieldboundary() const {
+	pWind->SetPen(config.penColor, config.penWidth);
+	// Draw from below the BudgetBar to above the StatusBar
+	pWind->DrawRectangle(0, 2 * config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight, FRAME);
+}
 
 void Game::printMessage(string msg) const
 {
