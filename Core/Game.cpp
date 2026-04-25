@@ -26,6 +26,9 @@ Game::Game()
 	// Abdelaziz Feature 1 end
     warehouse();
 	clearStatusBar();
+	foodList = new FoodArea * [50];
+	for (int i = 0; i < 50; i++)
+		foodList[i] = nullptr;
 }
 
 Game::~Game()
