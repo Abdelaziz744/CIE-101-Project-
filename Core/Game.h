@@ -2,35 +2,54 @@
 #include "../CMUgraphicsLib/CMUgraphics.h"
 #include "../UI/Toolbar.h"
 #include "../UI/BudgetBar.h"
+#include <ctime>
+#include <string>
+
+class Animal;
+class Product;
 
 class Game
 {
 private:
-	window* pWind;	//Pointer to the CMU graphics window
+	window* pWind;
 	Toolbar* gameToolbar;
 	Budgetbar* gameBudgetbar;
+
+	// Abdelaziz Feature 1 start
+	Animal* animalList[100];
+	int animalCount;
+	Product* productList[100];
+	int productCount;
+	int level;
+	int goal;
+	time_t startTime;
+	// Abdelaziz Feature 1 end
 
 public:
 	int budget = 2000;
 	Game();
 	~Game();
 
-	clicktype getMouseClick(int& x, int& y) const; //Get coordinate where user clicks and returns click type (left/right)
-	string getSrting() const;	 //Returns a string entered by the user
+	clicktype getMouseClick(int& x, int& y) const;
+	string getSrting() const;
 
-
-	window* CreateWind(int, int, int, int) const; //creates the game window
+	window* CreateWind(int, int, int, int) const;
 	void createToolbar();
 	void createBudgetbar();
 	void clearBudget() const;
 	void printBudget(string msg) const;
-	void clearStatusBar() const;	//Clears the status bar
+	void clearStatusBar() const;
+	void printMessage(string msg) const;
 
-
-	void printMessage(string msg) const;	//Print a message on Status bar
+	// Abdelaziz Feature 1 start
+	void updateStatusBar(int elapsedTime) const;
+	void addAnimal(Animal* pAnim);
+	void addProduct(Product* pProd);
+	void drawAllAnimals() const;
+	void drawAllProducts() const;
+	// Abdelaziz Feature 1 end
 
 	void go() const;
 
-	window* getWind() const;		//returns a pointer to the graphics window
+	window* getWind() const;
 };
-
