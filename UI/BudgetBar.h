@@ -31,12 +31,20 @@ public:
 	CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick();
 };
-
+class WaterIcon : public BudgetbarIcon
+{
+public:
+	FoodArea** foodList;
+	int count = 0;
+	WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual void onClick();
+};
 
 enum ANIMAL_ICONS
 {
 	ICON_CHICK,
 	ICON_COW,
+    ICON_WATER,
 	ANIMAL_COUNT
 };
 
