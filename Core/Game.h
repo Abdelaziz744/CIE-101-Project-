@@ -27,6 +27,11 @@ private:
 
 public:
 	int budget = 2000;
+	int level = 1;
+	int time = 150;
+	int animalcount = 0;
+	void gametimer(int level); // The function to calculate time
+
 	Game();
 	~Game();
 
@@ -39,6 +44,7 @@ public:
 	void clearBudget() const;
 	void printBudget(string msg) const;
 	void clearStatusBar() const;
+    void updatestatusbar() const; //refresh the status bar continously
 	void printMessage(string msg) const;
 
 	// Abdelaziz Feature 1 start
