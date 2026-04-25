@@ -24,7 +24,7 @@ Game::Game()
 		productList[i] = nullptr;
 	}
 	// Abdelaziz Feature 1 end
-
+    warehouse();
 	clearStatusBar();
 }
 
@@ -96,7 +96,12 @@ void Game::createBudgetbar()
 	gameBudgetbar = new Budgetbar(this, budgetbarUpperleft, 0, config.toolBarHeight);
 	gameBudgetbar->draw();
 }
+void Game::warehouse() const    // Draw the warehouse in the upper right corner of the playing area
+{
+	window* pWind = getWind();  
+	pWind->DrawImage("images\\warehouse.jpg", 550, 100, 110, 110);
 
+}
 void Game::clearBudget() const
 {
 	pWind->SetPen(config.bkGrndColor, 1);
@@ -217,7 +222,7 @@ void Game::go() const
 			}
 		}
 		wasMouseDown = isMouseDown;
-
+        warehouse();
 		// Abdelaziz Feature 1 start
 		time_t currentTime = time(0);
 		int elapsedTime = (int)(currentTime - startTime);
