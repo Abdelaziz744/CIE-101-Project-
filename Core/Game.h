@@ -65,8 +65,6 @@ public:
 	void     createWolf();
 	void     createFoodAreas();
 	void     gameTick();        
-	//Ahmed Ismail
-	void drawFoodArea() const;
 	// Abdelaziz Feature 1 start
 	void updateStatusBar(int elapsedTime) const;
 	void addAnimal(Animal* pAnim);
