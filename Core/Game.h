@@ -9,12 +9,24 @@
 class Animal;
 class Product;
 
+//magdy
+class Warehouse;
+class Wolf;
+class FoodArea;
+
 class Game
 {
 private:
 	window* pWind;
 	Toolbar* gameToolbar;
 	Budgetbar* gameBudgetbar;
+
+//magdy
+Warehouse*  warehouse;
+FoodArea* foodAreas[5];
+int       numFoodAreas;
+time_t    lastTickTime;     
+int       tickCount;    
 
 	// Abdelaziz Feature 1 start
 	Animal* animalList[100];
@@ -48,6 +60,14 @@ public:
 	void clearStatusBar() const;
     void updatestatusbar() const; //refresh the status bar continously
 	void printMessage(string msg) const;
+//magdy
+void     createWarehouse();
+void     createWolf();
+void     createFoodAreas();
+void     gameTick();        
+
+
+
 
 	// Abdelaziz Feature 1 start
 	void updateStatusBar(int elapsedTime) const;
