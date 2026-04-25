@@ -25,10 +25,18 @@ public:
 	ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick();
 };
+class CowIcon : public BudgetbarIcon
+{
+public:
+	CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual void onClick();
+};
+
 
 enum ANIMAL_ICONS
 {
 	ICON_CHICK,
+	ICON_COW,
 	ANIMAL_COUNT
 };
 
