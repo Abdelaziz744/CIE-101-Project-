@@ -45,6 +45,30 @@ void ChickIcon::onClick()
 
 	}
 }
+void CowIcon::onClick()
+{
+	cout << "Icon Cow Clicked" << endl;
+	if (pGame->budget > 200) {
+		pGame->budget = pGame->budget - 200;
+		pGame->clearBudget();
+		string budget_string = "BUDGET = $" + to_string(pGame->budget);
+		pGame->printBudget(budget_string);
+
+		point p;
+
+		std::random_device rd;
+		std::mt19937 gen(rd());
+
+		std::uniform_int_distribution<int> distx(range_min_x, range_max_x);
+		std::uniform_int_distribution<int> disty(range_min_y, range_max_y);
+
+		p.x = distx(gen);
+		p.y = disty(gen);
+
+		cowList[count] = new Cow(pGame, p, 70, 70, image_path);
+		cowList[count]->draw();
+		count++;
+	}
 
 Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height)
 	: Drawable(r_pGame, r_point, r_width, r_height)
