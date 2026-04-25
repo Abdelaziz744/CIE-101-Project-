@@ -53,6 +53,7 @@ public:
 	void addProduct(Product* pProd);
 	void drawAllAnimals() const;
 	void drawAllProducts() const;
+    void warehouse() const;
 	// Abdelaziz Feature 1 end
 
 	void go() const;
