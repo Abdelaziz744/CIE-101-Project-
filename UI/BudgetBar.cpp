@@ -75,13 +75,49 @@ void CowIcon::onClick()
 		pGame->addAnimal(new Cow(pGame, p, 80, 80, image_path));
 	}
 }
+WaterIcon::WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path)
+	: BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
+{
+	foodList = new FoodArea * [20];
+	for (int i = 0; i < 20; i++)
+		foodList[i] = nullptr;
+}
 
+void WaterIcon::onClick()
+{
+	cout << "Water Icon Clicked" << endl;
+
+	if (pGame->budget >= 20)
+	{
+		pGame->budget -= 20;
+		pGame->clearBudget();
+		string budget_string = "BUDGET = $" + to_string(pGame->budget) + " | Animals buying: $100 | Water buying: $20";
+		pGame->printBudget(budget_string);
+
+		std::random_device rd1;
+		std::mt19937 gen1(rd1());
+		std::uniform_int_distribution<int> distx(range_min_x, range_max_x);
+
+		std::random_device rd2;
+		std::mt19937 gen2(rd2());
+		std::uniform_int_distribution<int> disty(range_min_y, range_max_y);
+
+		point p;
+		p.x = distx(gen1);
+		p.y = disty(gen2);
+
+		foodList[count] = new FoodArea(pGame, p, 80, 80, "images\\grass.jpg");
+		foodList[count]->draw();
+		pGame->foodList[pGame->foodListSize++] = foodList[count];
+		count++;
+	}
+}
 Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height)
 	: Drawable(r_pGame, r_point, r_width, r_height)
 {
 	iconsImages[ICON_CHICK] = "images\\chick.jpg";
 	iconsImages[ICON_COW] = "images\\cow.jpg";
-
+    iconsImages[ICON_WATER] = "images\\water.jpg";
 	point p;
 	p.x = 0;
 	p.y = config.toolBarHeight;
@@ -90,6 +126,9 @@ Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height)
 	iconsList[ICON_CHICK] = new ChickIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_CHICK]);
 	p.x += config.iconWidth;
 	iconsList[ICON_COW] = new CowIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_COW]);
+	p.x += config.iconWidth;
+	iconsList[ICON_WATER] = new WaterIcon(pGame, p, config.iconWidth, config.toolBarHeight,iconsImages[ICON_WATER]);
+    p.x += config.iconWidth;
 }
 
 Budgetbar::~Budgetbar()
